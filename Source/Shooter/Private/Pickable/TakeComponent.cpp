@@ -2,9 +2,8 @@
 
 
 #include "Pickable/TakeComponent.h"
-
-
 #include "GameFramework/Character.h"
+#include "Pickable/UseInterface.h"
 
 
 UTakeComponent::UTakeComponent()
@@ -20,7 +19,10 @@ void UTakeComponent::BeginPlay()
 	
 }
 
-bool UTakeComponent::TryTakeItem(ABasePickableItem* Item)
+
+
+
+bool UTakeComponent::TryTakeItem(AActor* Item)
 {
 	if(TakenItems.Num() > 3)
 		return false;
@@ -29,33 +31,44 @@ bool UTakeComponent::TryTakeItem(ABasePickableItem* Item)
 	
 	const FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget,
 	                                            EAttachmentRule::KeepRelative, true);
-	Item->AttachToComponent(Cast<ACharacter>(GetOwner())->GetMesh(), AttachRules);
+	Cast<AActor>(Item)->AttachToComponent(Cast<ACharacter>(GetOwner())->GetMesh(), AttachRules);
 	
 	return true;
 }
 
-bool UTakeComponent::TryUseCurrentItem()
+void UTakeComponent::StartUseCurrentItem()
 {
 	if(!CanUseCurrentItem())
-		return false;
+		return;
 	
-	IUseInterface::Execute_Use(TakenItems[CurrentTakenItem]);
-	
-	return true;
+	IUseInterface::Execute_StartUse(TakenItems[CurrentTakenItem]);
+}
+
+void UTakeComponent::StopUseCurrentItem()
+{
+	if(!IsCurrentItemValidForUse())
+		return;
+
+	IUseInterface::Execute_StopUse(TakenItems[CurrentTakenItem]);
 }
 
 bool UTakeComponent::CanUseCurrentItem()
 {
+	return IsCurrentItemValidForUse() && CanUseItem(TakenItems[CurrentTakenItem]);
+}
+
+bool UTakeComponent::IsCurrentItemValidForUse()
+{
 	if(CurrentTakenItem == -1)
 		return false;
 
-	UObject* UseObject = TakenItems[CurrentTakenItem];
-	
-	if(!UseObject->Implements<UUseInterface>())
+	if(!TakenItems[CurrentTakenItem]->Implements<UUseInterface>())
 		return false;
-
-	if(!IUseInterface::Execute_CanUse(UseObject))
-		return false;
-
+		
 	return true;
+}
+
+bool UTakeComponent::CanUseItem(AActor* Item)
+{
+	return IUseInterface::Execute_CanUse(Item);
 }

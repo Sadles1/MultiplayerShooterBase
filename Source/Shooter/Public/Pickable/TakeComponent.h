@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BasePickableItem.h"
 #include "Components/ActorComponent.h"
 #include "TakeComponent.generated.h"
 
@@ -17,9 +16,11 @@ public:
 	
 	UTakeComponent();
 
-	bool TryTakeItem(ABasePickableItem* Item);
+	bool TryTakeItem(AActor* Item);
 
-	bool TryUseCurrentItem();
+	void StartUseCurrentItem();
+	void StopUseCurrentItem();
+	
 	bool CanUseCurrentItem();
 
 	
@@ -27,13 +28,15 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	bool IsCurrentItemValidForUse();
+	bool CanUseItem(AActor* Item);
 	
 private:
 
 	UPROPERTY()
-    TArray<ABasePickableItem*> TakenItems;
+    TArray<AActor*> TakenItems;
 
 	UPROPERTY()
-	uint32 CurrentTakenItem = -1;
+	int8 CurrentTakenItem = -1;
 	
 };

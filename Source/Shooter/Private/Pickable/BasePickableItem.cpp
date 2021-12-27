@@ -3,20 +3,21 @@
 
 #include "Pickable/BasePickableItem.h"
 
-#include "Pickable/TakeInterface.h"
-
 
 ABasePickableItem::ABasePickableItem()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
 	bReplicates = true;
+
+	PickupComponent = CreateDefaultSubobject<UPickupComponent>(TEXT("PickupComponent"));
 }
 
 void ABasePickableItem::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	check(PickupComponent);
 }
 
 bool ABasePickableItem::CanInteract_Implementation(AController* Controller)
@@ -26,16 +27,5 @@ bool ABasePickableItem::CanInteract_Implementation(AController* Controller)
 
 void ABasePickableItem::Interact_Implementation(AController* Controller)
 {
-	if(!Controller->Implements<UTakeInterface>())
-		return;
-	
-	UTakeComponent* TakeComponent =	Cast<ITakeInterface>(Controller)->GetTakeComponent();
-	TakeComponent->TryTakeItem(this);
-}
-
-void ABasePickableItem::Use_Implementation() {}
-
-bool ABasePickableItem::CanUse_Implementation()
-{
-	return true;
+	PickupComponent->TryPickItem(Controller);
 }

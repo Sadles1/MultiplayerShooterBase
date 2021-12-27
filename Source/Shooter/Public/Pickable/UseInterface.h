@@ -22,5 +22,8 @@ public:
 	bool CanUse();
 
 	UFUNCTION(BlueprintNativeEvent)
-	void Use();
+	void StartUse();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void StopUse();
 };

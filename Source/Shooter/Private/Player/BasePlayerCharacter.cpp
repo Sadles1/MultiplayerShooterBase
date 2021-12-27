@@ -32,7 +32,12 @@ void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void ABasePlayerCharacter::Server_UseCurrentItem_Implementation()
+void ABasePlayerCharacter::Server_StartUseCurrentItem_Implementation()
 {
-	GetTakeComponent()->TryUseCurrentItem();
+	GetTakeComponent()->StartUseCurrentItem();
+}
+
+void ABasePlayerCharacter::Server_StopUseCurrentItem_Implementation()
+{
+	GetTakeComponent()->StopUseCurrentItem();
 }

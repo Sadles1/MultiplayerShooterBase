@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UseInterface.h"
+#include "PickupComponent.h"
 #include "GameFramework/Actor.h"
 
 
@@ -13,7 +13,7 @@
 #include "BasePickableItem.generated.h"
 
 UCLASS(Abstract)
-class SHOOTER_API ABasePickableItem : public AActor, public IInteractInterface, public IUseInterface
+class SHOOTER_API ABasePickableItem : public AActor, public IInteractInterface
 {
 	GENERATED_BODY()
 
@@ -29,7 +29,8 @@ protected:
 	virtual bool CanInteract_Implementation(AController* Controller) override;
 	virtual void Interact_Implementation(AController* Controller) override;
 
-	virtual void Use_Implementation() override;
-	virtual bool CanUse_Implementation() override;
-	
+private:
+
+	UPROPERTY()
+	UPickupComponent* PickupComponent = nullptr;
 };
