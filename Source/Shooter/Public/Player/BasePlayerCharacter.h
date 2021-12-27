@@ -25,6 +25,12 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	virtual void Server_StartUseCurrentItem();
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	virtual void Server_StopUseCurrentItem();
+
 	
 private:
 

@@ -7,6 +7,8 @@
 ABaseCharacter::ABaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+	TakeComponent = CreateDefaultSubobject<UTakeComponent>(TEXT("TakeComponent"));
 }
 
 
@@ -14,4 +16,9 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+UTakeComponent* ABaseCharacter::GetTakeComponent()
+{
+	return TakeComponent;
 }
