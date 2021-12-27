@@ -28,10 +28,16 @@ bool UTakeComponent::TryTakeItem(AActor* Item)
 		return false;
 	
 	CurrentTakenItem = TakenItems.Add(Item);
+	Item->SetOwner(GetOwner());
 	
-	const FAttachmentTransformRules AttachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget,
-	                                            EAttachmentRule::KeepRelative, true);
-	Cast<AActor>(Item)->AttachToComponent(Cast<ACharacter>(GetOwner())->GetMesh(), AttachRules);
+	const FAttachmentTransformRules AttachRules(
+		EAttachmentRule::SnapToTarget,
+		EAttachmentRule::SnapToTarget,
+		EAttachmentRule::KeepRelative,
+		true);
+	Cast<AActor>(Item)->AttachToComponent(
+		Cast<USceneComponent>(GetOwner()->GetComponentsByTag(USceneComponent::StaticClass(), "ITEM_SLOT")[0]),
+		AttachRules);
 	
 	return true;
 }
