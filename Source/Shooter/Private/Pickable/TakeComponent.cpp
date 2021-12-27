@@ -3,6 +3,7 @@
 
 #include "Pickable/TakeComponent.h"
 #include "GameFramework/Character.h"
+#include "Pickable/TakeInterface.h"
 #include "Pickable/UseInterface.h"
 
 
@@ -29,15 +30,8 @@ bool UTakeComponent::TryTakeItem(AActor* Item)
 	
 	CurrentTakenItem = TakenItems.Add(Item);
 	Item->SetOwner(GetOwner());
-	
-	const FAttachmentTransformRules AttachRules(
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::KeepRelative,
-		true);
-	Cast<AActor>(Item)->AttachToComponent(
-		Cast<USceneComponent>(GetOwner()->GetComponentsByTag(USceneComponent::StaticClass(), "ITEM_SLOT")[0]),
-		AttachRules);
+
+	Cast<ITakeInterface>(GetOwner())->AttachItemToHand(Item);
 	
 	return true;
 }

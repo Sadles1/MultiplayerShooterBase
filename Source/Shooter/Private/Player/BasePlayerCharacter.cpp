@@ -24,6 +24,7 @@ void ABasePlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	check(FirstPersonCamera);
+		
 }
 
 

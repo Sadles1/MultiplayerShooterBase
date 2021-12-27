@@ -107,8 +107,9 @@ void ABaseWeapon::MakeShoot()
 		return;
 
 	if(HitResult.GetActor())
-		UGameplayStatics::ApplyDamage(HitResult.GetActor(), Damage, Controller, GetOwner(), nullptr);
-	
+		UGameplayStatics::ApplyDamage(HitResult.GetActor(), Damage, Controller, GetOwner(), UDamageType::StaticClass());
+
+	//HitResult.GetActor()->TakeDamage(Damage, FDamageEvent(UDamageType::StaticClass()), Controller, this);
 }
 
 bool ABaseWeapon::CanInteract_Implementation(AController* Controller)

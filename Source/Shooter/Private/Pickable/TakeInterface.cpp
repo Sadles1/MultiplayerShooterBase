@@ -9,3 +9,8 @@ UTakeComponent* ITakeInterface::GetTakeComponent()
 {
 	return nullptr;
 }
+
+void ITakeInterface::AttachItemToHand(AActor* Item)
+{
+	
+}

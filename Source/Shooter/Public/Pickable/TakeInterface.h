@@ -24,5 +24,6 @@ class SHOOTER_API ITakeInterface
 public:
 
 	virtual UTakeComponent* GetTakeComponent();
+	virtual void AttachItemToHand(AActor* Item);
 	
 };
