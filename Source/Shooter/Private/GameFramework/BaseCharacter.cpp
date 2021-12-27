@@ -39,6 +39,32 @@ float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	return DamageAmount;
 }
 
+void ABaseCharacter::AttachItemToHand(AActor* Item)
+{
+	USceneComponent* ItemSceneComponent = Cast<USceneComponent>(GetComponentsByTag(USceneComponent::StaticClass(), "ITEM_SLOT")[0]);
+
+	if(CurrentAttachedItem)
+	{
+		const FDetachmentTransformRules DetachRule(
+		EDetachmentRule::KeepRelative,
+		EDetachmentRule::KeepRelative,
+		EDetachmentRule::KeepRelative,
+		true);
+		CurrentAttachedItem->DetachFromActor(DetachRule);
+		CurrentAttachedItem->SetActorHiddenInGame(true);
+	}
+	
+	const FAttachmentTransformRules AttachRules(
+		EAttachmentRule::SnapToTarget,
+		EAttachmentRule::SnapToTarget,
+		EAttachmentRule::KeepRelative,
+		true);
+	
+	Item->AttachToComponent(ItemSceneComponent, AttachRules);
+	CurrentAttachedItem = Item;
+	CurrentAttachedItem->SetActorHiddenInGame(false);
+}
+
 void ABaseCharacter::OnDeath_Implementation()
 {
 	

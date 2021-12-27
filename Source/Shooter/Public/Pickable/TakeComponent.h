@@ -23,6 +23,9 @@ public:
 	
 	bool CanUseCurrentItem();
 
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void Server_SwitchCurrentItem(int32 NewItem);
+
 	
 protected:
 
@@ -30,6 +33,10 @@ protected:
 
 	bool IsCurrentItemValidForUse();
 	bool CanUseItem(AActor* Item);
+
+	void SetCurrentTakenItem(int8 NewItem);
+
+	void SwitchCurrentItem(int8 NewItem);
 	
 private:
 

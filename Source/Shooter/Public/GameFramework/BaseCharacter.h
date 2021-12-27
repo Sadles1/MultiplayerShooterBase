@@ -35,14 +35,18 @@ protected:
 	void OnDeath();
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	virtual void AttachItemToHand(AActor* Item) override;
 	
 	
 private:
 
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess))
 	UTakeComponent* TakeComponent = nullptr;
 
 	UPROPERTY(VisibleDefaultsOnly)
 	UHealthComponent* HealthComponent = nullptr;
+
+	UPROPERTY()
+	AActor* CurrentAttachedItem = nullptr;
 
 };

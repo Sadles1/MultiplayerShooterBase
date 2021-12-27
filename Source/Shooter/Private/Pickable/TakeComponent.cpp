@@ -17,9 +17,7 @@ UTakeComponent::UTakeComponent()
 void UTakeComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
-
 
 
 
@@ -27,13 +25,31 @@ bool UTakeComponent::TryTakeItem(AActor* Item)
 {
 	if(TakenItems.Num() > 3)
 		return false;
-	
-	CurrentTakenItem = TakenItems.Add(Item);
+
 	Item->SetOwner(GetOwner());
 
-	Cast<ITakeInterface>(GetOwner())->AttachItemToHand(Item);
+	SetCurrentTakenItem(TakenItems.Add(Item));
 	
 	return true;
+}
+
+void UTakeComponent::Server_SwitchCurrentItem_Implementation(int32 NewItem)
+{
+	SwitchCurrentItem(NewItem);
+}
+
+void UTakeComponent::SwitchCurrentItem(int8 NewItem)
+{
+	if(NewItem < TakenItems.Num() && TakenItems[NewItem])
+	{
+		SetCurrentTakenItem(NewItem);
+	}
+}
+
+void UTakeComponent::SetCurrentTakenItem(int8 NewItem)
+{
+	CurrentTakenItem = NewItem;
+	Cast<ITakeInterface>(GetOwner())->AttachItemToHand(TakenItems[CurrentTakenItem]);
 }
 
 void UTakeComponent::StartUseCurrentItem()
@@ -56,6 +72,8 @@ bool UTakeComponent::CanUseCurrentItem()
 {
 	return IsCurrentItemValidForUse() && CanUseItem(TakenItems[CurrentTakenItem]);
 }
+
+
 
 bool UTakeComponent::IsCurrentItemValidForUse()
 {
