@@ -2,8 +2,9 @@
 
 
 #include "Player/BasePlayerCharacter.h"
-#include "Camera/CameraComponent.h"
 
+
+#include "Camera/CameraComponent.h"
 
 
 ABasePlayerCharacter::ABasePlayerCharacter()
@@ -29,4 +30,9 @@ void ABasePlayerCharacter::BeginPlay()
 void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void ABasePlayerCharacter::Server_UseCurrentItem_Implementation()
+{
+	GetTakeComponent()->TryUseCurrentItem();
 }
