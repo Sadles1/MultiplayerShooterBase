@@ -32,6 +32,8 @@ public:
 	
 	ABaseWeapon();
 
+	FText GetWeaponName() const;
+
 	
 protected:
 	
@@ -56,6 +58,9 @@ private:
 	virtual void StopUse_Implementation() override;
 
 	virtual bool CanStartFire();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess))
+	FText Name = FText::FromString("Weapon");
 
 	UPROPERTY(EditAnywhere, Category = "Stats")
 	float FireRange = 2000.f;

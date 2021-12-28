@@ -10,6 +10,8 @@
 
 #include "MSGameMode.generated.h"
 
+
+
 UCLASS()
 class SHOOTER_API AMSGameMode : public AGameModeBase
 {

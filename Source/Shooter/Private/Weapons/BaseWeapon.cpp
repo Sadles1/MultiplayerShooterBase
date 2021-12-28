@@ -21,6 +21,7 @@ ABaseWeapon::ABaseWeapon()
 	
 }
 
+
 void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
@@ -108,8 +109,11 @@ void ABaseWeapon::MakeShoot()
 
 	if(HitResult.GetActor())
 		UGameplayStatics::ApplyDamage(HitResult.GetActor(), Damage, Controller, GetOwner(), UDamageType::StaticClass());
+}
 
-	//HitResult.GetActor()->TakeDamage(Damage, FDamageEvent(UDamageType::StaticClass()), Controller, this);
+FText ABaseWeapon::GetWeaponName() const
+{
+	return Name;
 }
 
 bool ABaseWeapon::CanInteract_Implementation(AController* Controller)
