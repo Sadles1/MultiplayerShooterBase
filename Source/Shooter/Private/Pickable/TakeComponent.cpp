@@ -5,21 +5,18 @@
 #include "GameFramework/Character.h"
 #include "Pickable/TakeInterface.h"
 #include "Pickable/UseInterface.h"
+#include "Weapons/BaseWeapon.h"
 
 
 UTakeComponent::UTakeComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
-	
-	
 }
 
 void UTakeComponent::BeginPlay()
 {
 	Super::BeginPlay();
 }
-
-
 
 bool UTakeComponent::TryTakeItem(AActor* Item)
 {
@@ -38,18 +35,25 @@ void UTakeComponent::Server_SwitchCurrentItem_Implementation(int32 NewItem)
 	SwitchCurrentItem(NewItem);
 }
 
+void UTakeComponent::Server_ReloadCurrentWeapon_Implementation()
+{
+	ABaseWeapon* Weapon = Cast<ABaseWeapon>(TakenItems[CurrentTakenItem]);
+	if(Weapon)
+		Weapon->TryReload();
+}
+
+
 void UTakeComponent::SwitchCurrentItem(int8 NewItem)
 {
 	if(NewItem < TakenItems.Num() && TakenItems[NewItem])
-	{
 		SetCurrentTakenItem(NewItem);
-	}
 }
 
 void UTakeComponent::SetCurrentTakenItem(int8 NewItem)
 {
 	CurrentTakenItem = NewItem;
 	Cast<ITakeInterface>(GetOwner())->AttachItemToHand(TakenItems[CurrentTakenItem]);
+	TookItem.Broadcast(TakenItems[CurrentTakenItem]);
 }
 
 void UTakeComponent::StartUseCurrentItem()
@@ -72,8 +76,6 @@ bool UTakeComponent::CanUseCurrentItem()
 {
 	return IsCurrentItemValidForUse() && CanUseItem(TakenItems[CurrentTakenItem]);
 }
-
-
 
 bool UTakeComponent::IsCurrentItemValidForUse()
 {

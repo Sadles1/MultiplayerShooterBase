@@ -7,18 +7,17 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Net/UnrealNetwork.h"
 
 
 ABaseWeapon::ABaseWeapon()
 {
 	bReplicates = true;
 
-
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMeshComponent"));
 	SetRootComponent(Mesh);
 	
 	PickupComponent = CreateDefaultSubobject<UPickupComponent>(TEXT("PickupComponent"));
-	
 }
 
 
@@ -51,13 +50,49 @@ bool ABaseWeapon::CanStartFire()
 	return CurrentState != EWeaponState::WS_Reload && CurrentState != EWeaponState::WS_Fire;
 }
 
+
+
+
 void ABaseWeapon::StartFire()
 {
+	check(HasAuthority())
 	CurrentState = EWeaponState::WS_Fire;
 }
 void ABaseWeapon::StopFire()
 {
+	check(HasAuthority())
 	CurrentState = EWeaponState::WS_None;
+}
+
+void ABaseWeapon::StartReload()
+{
+	if(CurrentState == EWeaponState::WS_Fire)
+		StopFire();
+
+	CurrentState = EWeaponState::WS_Reload;
+	GetWorldTimerManager().SetTimer(ReloadTimer, this, &ABaseWeapon::Reload, ReloadTime, false);
+}
+void ABaseWeapon::Reload()
+{
+	Ammo = AmmoInClip;
+	EndReload();
+}
+
+void ABaseWeapon::EndReload()
+{
+	CurrentState = EWeaponState::WS_None;
+	GetWorldTimerManager().ClearTimer(ReloadTimer);
+}
+
+bool ABaseWeapon::CanReload()
+{
+	if(Ammo >= AmmoInClip)
+		return false;
+	
+	if(CurrentState == EWeaponState::WS_Reload)
+		return false;
+	
+	return true;
 }
 
 void ABaseWeapon::TryShoot()
@@ -72,7 +107,7 @@ void ABaseWeapon::TryShoot()
 		StopFire();
 }
 
-float ABaseWeapon::GetFireRate()
+float ABaseWeapon::GetFireRate() const
 {
 	return 60.f / FireSpeed;
 }
@@ -116,6 +151,27 @@ FText ABaseWeapon::GetWeaponName() const
 	return Name;
 }
 
+bool ABaseWeapon::TryReload()
+{
+	check(HasAuthority())
+	if(CanReload())
+	{
+		StartReload();
+		return true;
+	}
+
+	return false;
+}
+
+float ABaseWeapon::GetCurrentAmmo() const
+{
+	return Ammo;
+}
+float ABaseWeapon::GetAmmoInClip() const
+{
+	return AmmoInClip;
+}
+
 bool ABaseWeapon::CanInteract_Implementation(AController* Controller)
 {
 	return true;
@@ -124,4 +180,23 @@ bool ABaseWeapon::CanInteract_Implementation(AController* Controller)
 void ABaseWeapon::Interact_Implementation(AController* Controller)
 {
 	PickupComponent->TryPickItem(Controller);
+}
+
+void ABaseWeapon::OnRep_Ammo() const
+{
+	AmmoChanged.Broadcast(Ammo);
+}
+
+void ABaseWeapon::OnRep_CurrentState() const
+{
+	StateChanged.Broadcast(CurrentState);
+}
+
+void ABaseWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(ABaseWeapon, Ammo, COND_OwnerOnly);
+	DOREPLIFETIME_CONDITION(ABaseWeapon, AmmoInClip, COND_OwnerOnly);
+	DOREPLIFETIME(ABaseWeapon, CurrentState);
 }
