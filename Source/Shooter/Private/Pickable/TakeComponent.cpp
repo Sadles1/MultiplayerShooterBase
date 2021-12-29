@@ -20,7 +20,7 @@ void UTakeComponent::BeginPlay()
 
 bool UTakeComponent::TryTakeItem(AActor* Item)
 {
-	if(TakenItems.Num() > 3)
+	if(TakenItems.Num() >= 3)
 		return false;
 
 	Item->SetOwner(GetOwner());
