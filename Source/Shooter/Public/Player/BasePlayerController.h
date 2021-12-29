@@ -36,8 +36,6 @@ private:
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void Server_Interact();
 
-	
-
 	bool TryInteract();
 	
 };

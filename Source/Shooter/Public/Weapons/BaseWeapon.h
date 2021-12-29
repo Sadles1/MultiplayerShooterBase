@@ -65,6 +65,8 @@ protected:
 	void TryShoot();
 	float GetFireRate() const;
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 private:
 
 	virtual bool CanInteract_Implementation(AController* Controller) override;
@@ -73,7 +75,6 @@ private:
 	virtual bool CanUse_Implementation() override;
 	virtual void StartUse_Implementation() override;
 	virtual void StopUse_Implementation() override;
-
 	
 	virtual void MakeShoot();
 	virtual bool CanStartFire();
@@ -81,9 +82,6 @@ private:
 	void StartReload();
 	virtual void Reload();
 	void EndReload();
-
-
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION()
 	void OnRep_Ammo() const;
@@ -101,7 +99,6 @@ private:
 	float Damage = 20.f;
 	UPROPERTY(EditAnywhere, Category = "Stats")
 	float FireSpeed = 200.f;
-
 	
 	
 	UPROPERTY(ReplicatedUsing = OnRep_Ammo, VisibleInstanceOnly, Category = "Stats")

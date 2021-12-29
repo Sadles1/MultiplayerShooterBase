@@ -3,6 +3,7 @@
 
 #include "GameFramework\BaseCharacter.h"
 
+#include "Components/CapsuleComponent.h"
 #include "Stats/HealthComponent.h"
 
 
@@ -18,10 +19,8 @@ ABaseCharacter::ABaseCharacter()
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
 	
-	if(HasAuthority())
-		HealthComponent->Death.AddDynamic(this, &ABaseCharacter::OnDeath);
+	HealthComponent->Death.AddDynamic(this, &ABaseCharacter::OnDeath);
 }
 
 UTakeComponent* ABaseCharacter::GetTakeComponent()
@@ -67,5 +66,6 @@ void ABaseCharacter::AttachItemToHand(AActor* Item)
 
 void ABaseCharacter::OnDeath_Implementation()
 {
-	
+	if(HasAuthority())
+		GetTakeComponent()->DestroyAllItems();
 }

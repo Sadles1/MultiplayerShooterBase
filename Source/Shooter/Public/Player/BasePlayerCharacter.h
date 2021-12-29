@@ -31,6 +31,8 @@ protected:
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	virtual void Server_StopUseCurrentItem();
 
+	virtual void OnDeath_Implementation() override;
+
 	
 private:
 

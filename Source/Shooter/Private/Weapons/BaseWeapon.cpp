@@ -50,9 +50,6 @@ bool ABaseWeapon::CanStartFire()
 	return CurrentState != EWeaponState::WS_Reload && CurrentState != EWeaponState::WS_Fire;
 }
 
-
-
-
 void ABaseWeapon::StartFire()
 {
 	check(HasAuthority())

@@ -33,6 +33,11 @@ void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void ABasePlayerCharacter::OnDeath_Implementation()
+{
+	Super::OnDeath_Implementation();
+}
+
 void ABasePlayerCharacter::Server_StartUseCurrentItem_Implementation()
 {
 	GetTakeComponent()->StartUseCurrentItem();

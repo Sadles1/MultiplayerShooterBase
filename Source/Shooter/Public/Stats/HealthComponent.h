@@ -21,16 +21,25 @@ public:
 	FDeath Death;
 
 	virtual void TakeDamage(float Damage);
+
+	
 protected:
 	
 	virtual void BeginPlay() override;
-
-	
 	
 	bool IsDead() const;
 
 	void OnOwnerDeath();
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	
+private:
+
+	UFUNCTION()
+	void OnRep_Dead() const;
+
+	
 private:
 
 	UPROPERTY(VisibleInstanceOnly, Category = "Health")
@@ -38,6 +47,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Health")
 	float MaxHealth = 100.f;
 
+	UPROPERTY(ReplicatedUsing = OnRep_Dead, VisibleInstanceOnly, Category = "Status")
 	bool Dead = false;
 	
 };

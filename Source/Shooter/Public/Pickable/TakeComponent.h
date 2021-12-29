@@ -31,6 +31,8 @@ public:
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void Server_ReloadCurrentWeapon();
 
+	void DestroyAllItems();
+
 	
 public:
 

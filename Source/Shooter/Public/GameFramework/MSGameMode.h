@@ -16,5 +16,14 @@ UCLASS()
 class SHOOTER_API AMSGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+
+	
+public:
+
+	UFUNCTION(BlueprintCallable)
+	void RespawnPlayer(AController* Controller);
+	
+	
+protected:
 	
 };

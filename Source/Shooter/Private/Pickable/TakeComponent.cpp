@@ -42,6 +42,11 @@ void UTakeComponent::Server_ReloadCurrentWeapon_Implementation()
 		Weapon->TryReload();
 }
 
+void UTakeComponent::DestroyAllItems()
+{
+	for(auto* Item : TakenItems)
+		Item->Destroy();
+}
 
 void UTakeComponent::SwitchCurrentItem(int8 NewItem)
 {
