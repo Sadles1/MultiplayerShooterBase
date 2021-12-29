@@ -7,6 +7,8 @@
 #include "TakeComponent.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTookNewItem, AActor*, NewItem);
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class SHOOTER_API UTakeComponent : public UActorComponent
 {
@@ -23,6 +25,20 @@ public:
 	
 	bool CanUseCurrentItem();
 
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void Server_SwitchCurrentItem(int32 NewItem);
+
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void Server_ReloadCurrentWeapon();
+
+	void DestroyAllItems();
+
+	
+public:
+
+	UPROPERTY(BlueprintAssignable)
+	FTookNewItem TookItem;
+
 	
 protected:
 
@@ -30,6 +46,10 @@ protected:
 
 	bool IsCurrentItemValidForUse();
 	bool CanUseItem(AActor* Item);
+
+	void SetCurrentTakenItem(int8 NewItem);
+
+	void SwitchCurrentItem(int8 NewItem);
 	
 private:
 

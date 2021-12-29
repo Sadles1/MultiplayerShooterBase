@@ -4,4 +4,10 @@
 #include "GameFramework/MSGameMode.h"
 
 
-
+void AMSGameMode::RespawnPlayer(AController* Controller)
+{
+	Controller->GetPawn()->Destroy();
+	
+	APawn* NewPawn = SpawnDefaultPawnFor(Controller, FindPlayerStart(Controller));
+	Controller->Possess(NewPawn);
+}

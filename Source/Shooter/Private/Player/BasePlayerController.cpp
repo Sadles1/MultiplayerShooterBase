@@ -2,11 +2,14 @@
 
 
 #include "Player/BasePlayerController.h"
+
+#include "GameFramework/MSGameMode.h"
 #include "Interact/InteractInterface.h"
 
 
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Weapons/WeaponConstructor.h"
 
 
 ABasePlayerController::ABasePlayerController() { }
@@ -45,12 +48,18 @@ bool ABasePlayerController::TryInteract()
 	return false;
 }
 
+void ABasePlayerController::Server_SpawnWeapon_Implementation(const TSubclassOf<ABaseWeapon> WeaponClass)
+{
+	UWeaponConstructor::SpawnWeapon(GetPawn(), WeaponClass,
+	                                GetPawn()->GetActorLocation() + GetPawn()->GetActorForwardVector() * 30.f);
+}
+
 void ABasePlayerController::Server_Interact_Implementation()
 {
 	TryInteract();
 }
 
-void ABasePlayerController::TraceForwardDirection(float Distance, FHitResult& HitResult) const
+void ABasePlayerController::TraceForwardDirection(const float Distance, FHitResult& HitResult) const
 {
 	const FVector ActorLocation = PlayerCameraManager->GetCameraLocation();
 	const FRotator ActorRotation = GetControlRotation();

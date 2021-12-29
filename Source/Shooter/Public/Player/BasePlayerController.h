@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Pickable/TakeInterface.h"
+#include "Weapons/BaseWeapon.h"
 #include "BasePlayerController.generated.h"
 
 UCLASS()
@@ -23,6 +24,9 @@ protected:
 	UFUNCTION()
 	virtual UTakeComponent* GetTakeComponent() override;
 
+	UFUNCTION(Server, Reliable, BlueprintCallable)
+	void Server_SpawnWeapon(TSubclassOf<ABaseWeapon> WeaponClass);
+
 	
 private:
 
@@ -31,8 +35,6 @@ private:
 
 	UFUNCTION(Server, Reliable, BlueprintCallable)
 	void Server_Interact();
-
-	
 
 	bool TryInteract();
 	

@@ -2,10 +2,19 @@
 
 #pragma once
 
+
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+
+
 #include "Pickable/TakeInterface.h"
+
+
 #include "BaseCharacter.generated.h"
+
+
+class UHealthComponent;
+
 
 UCLASS()
 class SHOOTER_API ABaseCharacter : public ACharacter, public ITakeInterface
@@ -21,10 +30,23 @@ protected:
 
 	virtual void BeginPlay() override;
 	virtual UTakeComponent* GetTakeComponent() override;
+
+	UFUNCTION(BlueprintNativeEvent)
+	void OnDeath();
+
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	virtual void AttachItemToHand(AActor* Item) override;
 	
 	
 private:
 
-	UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess))
 	UTakeComponent* TakeComponent = nullptr;
+
+	UPROPERTY(VisibleDefaultsOnly)
+	UHealthComponent* HealthComponent = nullptr;
+
+	UPROPERTY()
+	AActor* CurrentAttachedItem = nullptr;
+
 };

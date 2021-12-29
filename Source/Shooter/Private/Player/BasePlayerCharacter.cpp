@@ -24,12 +24,18 @@ void ABasePlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	check(FirstPersonCamera);
+		
 }
 
 
 void ABasePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void ABasePlayerCharacter::OnDeath_Implementation()
+{
+	Super::OnDeath_Implementation();
 }
 
 void ABasePlayerCharacter::Server_StartUseCurrentItem_Implementation()
